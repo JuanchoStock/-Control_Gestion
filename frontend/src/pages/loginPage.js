@@ -63,7 +63,7 @@ export const loginPage = () => {
   submitButton.classList.add(
     "w-full",
     "bg-blue-500",
-    "hover:bg-blue-700",
+    "hover:bg-green-700",
     "text-white",
     "font-bold",
     "py-2",
