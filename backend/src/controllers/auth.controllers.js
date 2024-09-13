@@ -50,6 +50,25 @@ export const signOutCtrl = (req, res) => {
   }
 };
 
+
+export const getTasksCtrl = (req, res) => {
+  try {
+    const tasks = database.tasks.filter((task) => task.userId === req.user.id);
+    return res.json(tasks);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error Inesperado" });
+  }
+};
+
+//controlador que muestre las tareas del usuario que inicia sesion
+
+export const createTaskCtrl = async (req, res) => {
+  const tasks = database.tasks.filter((task) => task.userId === req);
+
+  return res.json({tasks});
+}
+
 export const validateSessionCtrl = (req, res) => {
   console.log(req.user);
   return res.json({
