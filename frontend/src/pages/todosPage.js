@@ -32,6 +32,35 @@ export const todosPage = () => {
   title.classList.add("text-3xl", "font-bold", "mb-4");
   title.textContent = "List of Todos";
 
+  // Botón para agregar nueva tarea
+  const btnAddTodo = document.createElement("button");
+  btnAddTodo.classList.add(
+    "bg-green-500",
+    "text-white",
+    "p-2",
+    "rounded",
+    "hover:bg-green-600",
+    "mb-4"
+  );
+  btnAddTodo.textContent = "Agregar Tarea";
+  
+  btnAddTodo.addEventListener("click", () => {
+    const newTodoTitle = prompt("Ingrese el título de la nueva tarea:");
+    if (newTodoTitle) {
+      // Aquí haces la llamada al backend para crear la tarea
+      fetch("http://localhost:4000/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: newTodoTitle, completed: false }),
+        credentials: "include"
+      }).then(() => {
+        window.location.reload(); // Recargar la página para mostrar la nueva tarea
+      });
+    }
+  });
+
   const table = document.createElement("table");
 
   table.classList.add(
@@ -60,10 +89,15 @@ export const todosPage = () => {
   th4.classList.add("border", "px-4", "py-2");
   th4.textContent = "Owner Id";
 
+  const th5 = document.createElement("th");
+  th5.classList.add("border", "px-4", "py-2");
+  th5.textContent = "Acciones";
+
   tr.appendChild(th1);
   tr.appendChild(th2);
   tr.appendChild(th3);
   tr.appendChild(th4);
+  tr.appendChild(th5);
 
   thead.appendChild(tr);
 
@@ -74,6 +108,7 @@ export const todosPage = () => {
   table.appendChild(tbody);
 
   container.appendChild(btnHome);
+  container.appendChild(btnAddTodo); // Agregar botón de "Agregar Tarea"
   fetch("http://localhost:4000/todos", {
     credentials: 'include'
   })
@@ -100,10 +135,56 @@ export const todosPage = () => {
         td4.classList.add("border", "px-4", "py-2");
         td4.textContent = todo.owner;
 
+        // Columna para los botones de acciones (editar/eliminar)
+        const td5 = document.createElement("td");
+        td5.classList.add("border", "px-4", "py-2");
+
+        // Botón de editar
+        const btnEdit = document.createElement("button");
+        btnEdit.classList.add("bg-yellow-500", "text-white", "p-1", "rounded", "hover:bg-yellow-600", "mr-2");
+        btnEdit.textContent = "Editar";
+        btnEdit.addEventListener("click", () => {
+          const newTitle = prompt("Editar título de la tarea:", todo.title);
+          if (newTitle) {
+            // Llamada al backend para editar la tarea
+            fetch(`http://localhost:4000/todos/${todo.id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ title: newTitle }),
+              credentials: "include"
+            }).then(() => {
+              window.location.reload(); // Recargar para mostrar cambios
+            });
+          }
+        });
+
+        // Botón de eliminar
+        const btnDelete = document.createElement("button");
+        btnDelete.classList.add("bg-red-500", "text-white", "p-1", "rounded", "hover:bg-red-600");
+        btnDelete.textContent = "Eliminar";
+        btnDelete.addEventListener("click", () => {
+          if (confirm(`¿Está seguro que desea eliminar la tarea ${todo.title}?`)) {
+            // Llamada al backend para eliminar la tarea
+            fetch(`http://localhost:4000/todos/${todo.id}`, {
+              method: "DELETE",
+              credentials: "include"
+            }).then(() => {
+              window.location.reload(); // Recargar para actualizar la lista
+            });
+          }
+        });
+
+        td5.appendChild(btnEdit);
+        td5.appendChild(btnDelete);
+
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
         tr.appendChild(td4);
+        tr.appendChild(td5);
+
         tbody.appendChild(tr);
       });
     });

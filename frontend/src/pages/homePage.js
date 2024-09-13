@@ -49,7 +49,7 @@ export const homePage = () => {
     "hover:bg-blue-600"
   );
 
-  btnTodos.textContent = "View todos";
+  btnTodos.textContent = "View Todos List";
 
   btnTodos.addEventListener("click", () => {
     window.location.pathname = "/todos";
