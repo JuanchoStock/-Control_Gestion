@@ -61,13 +61,7 @@ export const getTasksCtrl = (req, res) => {
   }
 };
 
-//controlador que muestre las tareas del usuario que inicia sesion
 
-export const createTaskCtrl = async (req, res) => {
-  const tasks = database.tasks.filter((task) => task.userId === req);
-
-  return res.json({tasks});
-}
 
 export const validateSessionCtrl = (req, res) => {
   console.log(req.user);
